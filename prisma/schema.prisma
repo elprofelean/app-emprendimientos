@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Rubro {
+  id            String   @id @default(cuid())
+  nombre        String   @unique
+  icono         String   // nombre del icono de lucide: Heart, Utensils, Shirt, Laptop, etc.
+  color         String   // clases de color de tailwind
+  activo        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  emprendimientos Emprendimiento[]
+}
+
+model Emprendimiento {
+  id          String   @id @default(cuid())
+  nombre      String
+  urlRedSocial String?
+  imagen      String?  // Base64 encoded image
+  ubicacion   String
+  rubroId     String
+  rubro       Rubro    @relation(fields: [rubroId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
